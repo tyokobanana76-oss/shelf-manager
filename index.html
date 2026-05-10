@@ -669,10 +669,21 @@ function output(obj) {
 
 async function syncToGS(action, order) {
   if (!gsUrl) return;
-  try { await fetch(gsUrl, { method:'POST', body:JSON.stringify({action,order}) }); }
-  catch(e) { console.warn('GS sync failed:',e); }
+  try {
+    const params = new URLSearchParams({
+      action,
+      orderNo: order.orderNo || '',
+      name: order.name || '',
+      category: order.category || '',
+      date: order.date || '',
+      shelfCode: order.shelfCode || '',
+      status: order.status || '',
+      registeredAt: order.registeredAt || '',
+      completedAt: order.completedAt || ''
+    });
+    await fetch(`${gsUrl}?${params.toString()}`);
+  } catch(e) { console.warn('GS sync failed:',e); }
 }
-
 function saveLocal() { localStorage.setItem('shelfData', JSON.stringify(shelfData)); }
 
 function showToast(msg, type='') {
