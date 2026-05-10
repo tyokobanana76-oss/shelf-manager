@@ -7,29 +7,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <style>
   :root {
-    --bg: #0a0c10;
-    --panel: #111520;
-    --border: #1e2a3a;
-    --accent: #00c8ff;
-    --accent2: #ff6b35;
-    --text: #e0eaf5;
-    --text-dim: #5a7080;
-    --success: #00e676;
-    --warn: #ffb300;
-    --danger: #ff3d3d;
-    --cat-blast: #ff6b35;
-    --cat-iron: #607d8b;
-    --cat-hontai: #00c8ff;
-    --cat-frame: #7c4dff;
-    --cat-sus: #00e676;
+    --bg: #0a0c10; --panel: #111520; --border: #1e2a3a;
+    --accent: #00c8ff; --accent2: #ff6b35; --text: #e0eaf5;
+    --text-dim: #5a7080; --success: #00e676; --warn: #ffb300; --danger: #ff3d3d;
+    --cat-blast: #ff6b35; --cat-iron: #607d8b; --cat-hontai: #00c8ff;
+    --cat-frame: #7c4dff; --cat-sus: #00e676;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; min-height: 100vh; overflow-x: hidden; }
-  body::before {
-    content: ''; position: fixed; inset: 0;
-    background-image: linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px; pointer-events: none; z-index: 0;
-  }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
   .container { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 12px; }
   header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); margin-bottom: 12px; }
   .header-title { font-size: 13px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; }
@@ -99,6 +85,8 @@
   .legend { display: flex; gap: 16px; padding: 8px 12px; background: var(--panel); border: 1px solid var(--border); margin-bottom: 12px; flex-wrap: wrap; }
   .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; }
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .reload-btn { padding: 8px 16px; background: transparent; border: 1px solid var(--accent); color: var(--accent); font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: 2px; cursor: pointer; }
+  .shelf-status { font-size: 10px; color: var(--text-dim); margin-bottom: 8px; }
   .log-list { list-style: none; max-height: 300px; overflow-y: auto; }
   .log-item { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 11px; display: flex; gap: 8px; align-items: flex-start; }
   .log-time { color: var(--text-dim); white-space: nowrap; font-size: 10px; }
@@ -116,7 +104,6 @@
   .toast.success { border-color: var(--success); color: var(--success); }
   .page { display: none; }
   .page.active { display: block; }
-  /* モーダル */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
   .modal-box { background: var(--panel); border: 1px solid var(--border); padding: 20px; width: 100%; max-width: 400px; max-height: 80vh; overflow-y: auto; }
   .modal-title { font-size: 10px; letter-spacing: 3px; color: var(--text-dim); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
@@ -125,6 +112,7 @@
   .modal-item-date { font-size: 10px; color: var(--text-dim); }
   .del-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); font-family: 'Courier New', monospace; font-size: 10px; padding: 4px 10px; cursor: pointer; }
   .modal-close { width: 100%; margin-top: 12px; padding: 12px; background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); font-family: 'Courier New', monospace; font-size: 11px; cursor: pointer; }
+  .loading { text-align: center; color: var(--text-dim); font-size: 11px; padding: 20px; letter-spacing: 2px; }
 </style>
 </head>
 <body>
@@ -136,7 +124,6 @@
     </div>
     <div class="clock" id="clock">--:--:--</div>
   </header>
-
   <div class="tabs">
     <button class="tab active" onclick="switchTab('scan',this)">スキャン</button>
     <button class="tab" onclick="switchTab('shelf',this)">棚ビュー</button>
@@ -180,9 +167,11 @@
       <div class="legend-item"><div class="legend-dot" style="background:var(--danger)"></div><span style="color:var(--danger)">遅延</span></div>
       <div class="legend-item"><div class="legend-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">今日</span></div>
       <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div><span>予定</span></div>
+      <button class="reload-btn" onclick="loadShelfFromGS()">🔄 更新</button>
     </div>
+    <div class="shelf-status" id="shelf-status"></div>
     <div class="panel">
-      <div class="panel-title">棚マップ（← 遅延　今日　予定 →）　← 横スクロール　タップで詳細/削除</div>
+      <div class="panel-title">棚マップ　← 横スクロール　タップで詳細/削除</div>
       <div class="shelf-wrapper">
         <div class="shelf-grid" id="shelf-grid"></div>
       </div>
@@ -214,77 +203,104 @@ const CATEGORIES = [
   { id:'frame',  label:'フレームホンタイ', color:'var(--cat-frame)'  },
   { id:'sus',    label:'SUS',              color:'var(--cat-sus)'    },
 ];
+const CAT_MAP_REVERSE = {'ブラスト':'blast','鉄':'iron','ホンタイ':'hontai','フレームホンタイ':'frame','SUS':'sus'};
 const COLS = [
-  { key:'overdue', type:'overdue' },
-  { key:'-1',      type:'past'   },
-  { key:'0',       type:'today'  },
-  { key:'1',       type:'future' },
-  { key:'2',       type:'future' },
-  { key:'3',       type:'future' },
-  { key:'4',       type:'future' },
-  { key:'5',       type:'future' },
-  { key:'6',       type:'future' },
-  { key:'7',       type:'future' },
+  {key:'overdue',type:'overdue'},{key:'-1',type:'past'},{key:'0',type:'today'},
+  {key:'1',type:'future'},{key:'2',type:'future'},{key:'3',type:'future'},
+  {key:'4',type:'future'},{key:'5',type:'future'},{key:'6',type:'future'},{key:'7',type:'future'},
 ];
 
-function getToday() { const d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate()); }
-function offsetToDate(offset) { const d=getToday(); d.setDate(d.getDate()+offset); return d; }
-function formatMD(date) { return `${date.getMonth()+1}/${date.getDate()}`; }
+function getToday(){const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+function offsetToDate(offset){const d=getToday();d.setDate(d.getDate()+offset);return d;}
+function formatMD(date){return `${date.getMonth()+1}/${date.getDate()}`;}
 
-function getColHeaderHTML(col) {
-  if (col.key==='overdue') return '遅延<br>以前';
+function getColHeaderHTML(col){
+  if(col.key==='overdue') return '遅延<br>以前';
   const offset=parseInt(col.key);
   const md=formatMD(offsetToDate(offset));
   const lbl=offset===-1?'前日':offset===0?'今日':offset===1?'明日':offset===2?'明後日':`+${offset}日`;
   return `${md}<br><span style="font-size:7px">${lbl}</span>`;
 }
 
-function getShelfCode(catId, colKey) {
+function getShelfCode(catId,colKey){
   const ci=CATEGORIES.findIndex(c=>c.id===catId);
   const di=COLS.findIndex(c=>c.key===colKey);
   return `${String.fromCharCode(65+ci)}${di+1}`;
 }
 
-function dateToColKey(dateStr) {
-  if (!dateStr) return null;
+function dateToColKey(dateStr){
+  if(!dateStr) return null;
   const parts=dateStr.split('/');
-  if (parts.length<2) return null;
+  if(parts.length<2) return null;
   const today=getToday();
   const target=new Date(today.getFullYear(),parseInt(parts[0])-1,parseInt(parts[1]));
   const diff=Math.round((target-today)/86400000);
-  if (diff<-1) return 'overdue';
-  if (diff>7) return '7';
+  if(diff<-1) return 'overdue';
+  if(diff>7) return '7';
   return String(diff);
 }
 
+function getCatIdFromLabel(label){return CAT_MAP_REVERSE[label]||label;}
+function getCatLabel(catId){return CATEGORIES.find(c=>c.id===catId)?.label||catId;}
+
 let gsUrl=localStorage.getItem('gsUrl')||'';
-let shelfData=JSON.parse(localStorage.getItem('shelfData')||'{}');
+let shelfData={};  // GSから取得したデータ
+let localData=JSON.parse(localStorage.getItem('localData')||'{}');  // ローカルのみ
 let logs=JSON.parse(localStorage.getItem('shelfLogs')||'[]');
 let scanning=false;
 let currentOrder=null;
 
-function updateClock() {
+function updateClock(){
   const n=new Date();
   document.getElementById('clock').textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
 }
-setInterval(updateClock,1000); updateClock();
+setInterval(updateClock,1000);updateClock();
 
-function switchTab(tab,el) {
+function switchTab(tab,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
   el.classList.add('active');
-  if (tab==='shelf') renderShelfGrid();
-  if (tab==='log') renderLog();
-  if (tab==='settings') renderSettings();
+  if(tab==='shelf') loadShelfFromGS();
+  if(tab==='log') renderLog();
+  if(tab==='settings') renderSettings();
 }
 
-function toggleCamera() { scanning?stopCamera():startCamera(); }
+// GS全件取得して棚ビューを更新
+async function loadShelfFromGS(){
+  const statusEl=document.getElementById('shelf-status');
+  if(!gsUrl){
+    statusEl.textContent='GS未設定 - 設定タブでURLを登録してください';
+    renderShelfGrid();
+    return;
+  }
+  statusEl.textContent='読み込み中...';
+  try{
+    const res=await fetch(`${gsUrl}?action=getAll`);
+    const data=await res.json();
+    if(data.success&&data.orders){
+      shelfData={};
+      data.orders.forEach(o=>{
+        // カテゴリを内部IDに変換
+        const catId=getCatIdFromLabel(o.category)||o.category;
+        shelfData[o.orderNo]={...o,category:catId};
+      });
+      const now=new Date();
+      statusEl.textContent=`最終更新: ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')} （${data.orders.length}件）`;
+    }
+  }catch(e){
+    statusEl.textContent='GS取得エラー';
+    console.warn('GS fetch error:',e);
+  }
+  renderShelfGrid();
+}
 
-function startCamera() {
+function toggleCamera(){scanning?stopCamera():startCamera();}
+
+function startCamera(){
   document.getElementById('camera-container').classList.add('active');
   const btn=document.getElementById('scan-btn');
-  btn.classList.add('scanning'); btn.textContent='📷 スキャン中...';
+  btn.classList.add('scanning');btn.textContent='📷 スキャン中...';
   document.getElementById('stop-btn').style.display='block';
   scanning=true;
   Quagga.init({
@@ -302,7 +318,7 @@ function startCamera() {
   });
 }
 
-function stopCamera() {
+function stopCamera(){
   Quagga.stop();scanning=false;
   document.getElementById('camera-container').classList.remove('active');
   const btn=document.getElementById('scan-btn');
@@ -310,24 +326,32 @@ function stopCamera() {
   document.getElementById('stop-btn').style.display='none';
 }
 
-async function processOrderNo(forceNo) {
+async function processOrderNo(forceNo){
   const orderNo=forceNo||document.getElementById('manual-input').value.trim();
   if(!orderNo){showToast('受注No.を入力してください','error');return;}
-  let order=shelfData[orderNo];
+
+  // GS・shelfData・localDataから検索
+  let order=shelfData[orderNo]||localData[orderNo];
+
   if(!order&&gsUrl){
     showToast('データ取得中...','');
     try{
       const res=await fetch(`${gsUrl}?action=get&orderNo=${encodeURIComponent(orderNo)}`);
       const data=await res.json();
-      if(data.success&&data.order){order=data.order;shelfData[orderNo]=order;saveLocal();}
+      if(data.success&&data.order){
+        const catId=getCatIdFromLabel(data.order.category)||data.order.category;
+        order={...data.order,category:catId};
+        shelfData[orderNo]=order;
+      }
     }catch(e){showToast('GS接続エラー（オフラインで継続）','error');}
   }
+
   if(!order) order={orderNo,name:'',category:'',date:'',shelfCode:'',status:'new'};
   currentOrder=order;
   renderOrderCard(order);
 }
 
-function renderOrderCard(order) {
+function renderOrderCard(order){
   document.getElementById('order-card').classList.add('active');
   document.getElementById('result-orderno').textContent=order.orderNo;
   document.getElementById('result-name').textContent=order.name||'（未登録）';
@@ -340,7 +364,7 @@ function renderOrderCard(order) {
   const statusEl=document.getElementById('result-status');
   const btns=document.getElementById('action-btns');
 
-  if(order.status==='new'){
+  if(order.status==='new'||order.status===''){
     statusEl.textContent='新規';statusEl.style.color='var(--accent2)';
     loc.className='shelf-location new';
     label.textContent='事前配布を登録';
@@ -363,8 +387,9 @@ function renderOrderCard(order) {
       <button class="action-btn register" onclick="registerOrder()">棚に登録</button>
     `;
     if(order.date){const ck=dateToColKey(order.date);if(ck)document.getElementById('date-select').value=ck;}
+    if(order.category){document.getElementById('cat-select').value=order.category;}
 
-  }else if(order.status==='registered'){
+  }else if(order.status==='registered'||order.status==='事前配布済'){
     statusEl.textContent='事前配布済';statusEl.style.color='var(--accent)';
     loc.className='shelf-location new';
     label.textContent='棚位置';
@@ -373,7 +398,7 @@ function renderOrderCard(order) {
     btns.innerHTML=`<button class="action-btn complete" onclick="completeOrder()" style="flex:1">✓ 前工程到着 → 突き合わせ完了</button>`;
     highlightShelfCell(order.shelfCode);
 
-  }else if(order.status==='completed'){
+  }else{
     statusEl.textContent='突き合わせ完了';statusEl.style.color='var(--success)';
     loc.className='shelf-location found';
     label.textContent='突き合わせ済み';
@@ -383,9 +408,7 @@ function renderOrderCard(order) {
   }
 }
 
-function getCatLabel(catId){return CATEGORIES.find(c=>c.id===catId)?.label||catId;}
-
-function registerOrder() {
+function registerOrder(){
   const catId=document.getElementById('cat-select').value;
   const colKey=document.getElementById('date-select').value;
   if(!catId){showToast('カテゴリを選択してください','error');return;}
@@ -397,6 +420,7 @@ function registerOrder() {
   currentOrder.status='registered';
   currentOrder.registeredAt=new Date().toLocaleTimeString('ja-JP');
   shelfData[currentOrder.orderNo]=currentOrder;
+  localData[currentOrder.orderNo]=currentOrder;
   saveLocal();
   syncToGS('register',currentOrder);
   addLog('in',currentOrder.orderNo,shelfCode,getCatLabel(catId),currentOrder.date);
@@ -404,10 +428,11 @@ function registerOrder() {
   showToast(`棚 ${shelfCode} に登録しました`,'success');
 }
 
-function completeOrder() {
+function completeOrder(){
   currentOrder.status='completed';
   currentOrder.completedAt=new Date().toLocaleTimeString('ja-JP');
   shelfData[currentOrder.orderNo]=currentOrder;
+  delete localData[currentOrder.orderNo];
   saveLocal();
   syncToGS('complete',currentOrder);
   addLog('out',currentOrder.orderNo,currentOrder.shelfCode,getCatLabel(currentOrder.category),currentOrder.date);
@@ -415,7 +440,7 @@ function completeOrder() {
   showToast('突き合わせ完了！','success');
 }
 
-function renderShelfGrid() {
+function renderShelfGrid(){
   const grid=document.getElementById('shelf-grid');
   grid.innerHTML='';
   grid.innerHTML+='<div class="shelf-header"></div>';
@@ -441,7 +466,7 @@ function renderShelfGrid() {
 }
 
 function getShelfItems(code){
-  return Object.values(shelfData).filter(o=>o.shelfCode===code&&o.status==='registered');
+  return Object.values(shelfData).filter(o=>o.shelfCode===code&&(o.status==='registered'||o.status==='事前配布済'));
 }
 
 function highlightShelfCell(code){
@@ -451,10 +476,9 @@ function highlightShelfCell(code){
   },300);
 }
 
-function showCellDetail(code) {
+function showCellDetail(code){
   const items=getShelfItems(code);
   if(items.length===0){showToast(`${code}：空き`,'');return;}
-
   const list=items.map(o=>`
     <div class="modal-item">
       <div>
@@ -464,7 +488,6 @@ function showCellDetail(code) {
       <button class="del-btn" onclick="deleteOrder('${o.orderNo}')">削除</button>
     </div>
   `).join('');
-
   const modal=document.createElement('div');
   modal.className='modal-overlay';
   modal.id='cell-modal';
@@ -478,16 +501,24 @@ function showCellDetail(code) {
   document.body.appendChild(modal);
 }
 
-function deleteOrder(orderNo) {
+async function deleteOrder(orderNo){
   if(!confirm(`${orderNo} を棚から削除しますか？`)) return;
-  const order=shelfData[orderNo];
+  const order=shelfData[orderNo]||localData[orderNo];
   delete shelfData[orderNo];
+  delete localData[orderNo];
   saveLocal();
-  if(order) syncToGS('delete',{...order,status:'deleted'});
   document.getElementById('cell-modal')?.remove();
   addLog('del',orderNo,order?.shelfCode||'',getCatLabel(order?.category||''),order?.date||'');
   renderShelfGrid();
   showToast(`${orderNo} を削除しました`,'success');
+
+  // GSから削除
+  if(gsUrl){
+    try{
+      const params=new URLSearchParams({action:'delete',orderNo});
+      await fetch(`${gsUrl}?${params.toString()}`,{method:'GET',mode:'no-cors',redirect:'follow'});
+    }catch(e){console.warn('GS delete failed:',e);}
+  }
 }
 
 function addLog(type,orderNo,shelf,cat,date){
@@ -511,9 +542,7 @@ function renderLog(){
     </li>`).join('');
 }
 
-function renderSettings(){
-  document.getElementById('gs-url').value=gsUrl;
-}
+function renderSettings(){document.getElementById('gs-url').value=gsUrl;}
 
 function saveSettings(){
   gsUrl=document.getElementById('gs-url').value.trim();
@@ -525,21 +554,16 @@ async function syncToGS(action,order){
   if(!gsUrl) return;
   try{
     const params=new URLSearchParams({
-      action,
-      orderNo:order.orderNo||'',
-      name:order.name||'',
-      category:order.category||'',
-      date:order.date||'',
-      shelfCode:order.shelfCode||'',
-      status:order.status||'',
-      registeredAt:order.registeredAt||'',
-      completedAt:order.completedAt||''
+      action,orderNo:order.orderNo||'',name:order.name||'',
+      category:order.category||'',date:order.date||'',
+      shelfCode:order.shelfCode||'',status:order.status||'',
+      registeredAt:order.registeredAt||'',completedAt:order.completedAt||''
     });
     await fetch(`${gsUrl}?${params.toString()}`,{method:'GET',mode:'no-cors',redirect:'follow'});
   }catch(e){console.warn('GS sync failed:',e);}
 }
 
-function saveLocal(){localStorage.setItem('shelfData',JSON.stringify(shelfData));}
+function saveLocal(){localStorage.setItem('localData',JSON.stringify(localData));}
 
 function showToast(msg,type=''){
   const t=document.getElementById('toast');
