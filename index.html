@@ -681,8 +681,11 @@ async function syncToGS(action, order) {
       registeredAt: order.registeredAt || '',
       completedAt: order.completedAt || ''
     });
-    const img = new Image();
-    img.src = `${gsUrl}?${params.toString()}`;
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = `${gsUrl}?${params.toString()}`;
+    document.body.appendChild(iframe);
+    setTimeout(() => document.body.removeChild(iframe), 5000);
   } catch(e) { console.warn('GS sync failed:',e); }
 }
 function saveLocal() { localStorage.setItem('shelfData', JSON.stringify(shelfData)); }
