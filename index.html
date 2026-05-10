@@ -681,7 +681,8 @@ async function syncToGS(action, order) {
       registeredAt: order.registeredAt || '',
       completedAt: order.completedAt || ''
     });
-    await fetch(`${gsUrl}?${params.toString()}`, {mode:'no-cors'});
+    const img = new Image();
+    img.src = `${gsUrl}?${params.toString()}`;
   } catch(e) { console.warn('GS sync failed:',e); }
 }
 function saveLocal() { localStorage.setItem('shelfData', JSON.stringify(shelfData)); }
