@@ -681,11 +681,11 @@ async function syncToGS(action, order) {
       registeredAt: order.registeredAt || '',
       completedAt: order.completedAt || ''
     });
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = `${gsUrl}?${params.toString()}`;
-    document.body.appendChild(iframe);
-    setTimeout(() => document.body.removeChild(iframe), 5000);
+    await fetch(`${gsUrl}?${params.toString()}`, {
+      method: 'GET',
+      mode: 'no-cors',
+      redirect: 'follow'
+    });
   } catch(e) { console.warn('GS sync failed:',e); }
 }
 function saveLocal() { localStorage.setItem('shelfData', JSON.stringify(shelfData)); }
