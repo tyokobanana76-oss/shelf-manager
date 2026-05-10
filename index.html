@@ -681,7 +681,7 @@ async function syncToGS(action, order) {
       registeredAt: order.registeredAt || '',
       completedAt: order.completedAt || ''
     });
-    await fetch(`${gsUrl}?${params.toString()}`);
+    await fetch(`${gsUrl}?${params.toString()}`, {mode:'no-cors'});
   } catch(e) { console.warn('GS sync failed:',e); }
 }
 function saveLocal() { localStorage.setItem('shelfData', JSON.stringify(shelfData)); }
