@@ -18,16 +18,12 @@
     --success: #00e676;
     --warn: #ffb300;
     --danger: #ff3d3d;
-
-```
---cat-blast: #ff6b35;
---cat-iron: #607d8b;
---cat-hontai: #00c8ff;
---cat-frame: #7c4dff;
---cat-sus: #00e676;
-```
-
-}
+    --cat-blast: #ff6b35;
+    --cat-iron: #607d8b;
+    --cat-hontai: #00c8ff;
+    --cat-frame: #7c4dff;
+    --cat-sus: #00e676;
+  }
 
 - { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -39,7 +35,6 @@ min-height: 100vh;
 overflow-x: hidden;
 }
 
-/* グリッド背景 */
 body::before {
 content: ‘’;
 position: fixed;
@@ -52,504 +47,166 @@ pointer-events: none;
 z-index: 0;
 }
 
-.container {
-position: relative;
-z-index: 1;
-max-width: 900px;
-margin: 0 auto;
-padding: 12px;
-}
+.container { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 12px; }
 
-/* ヘッダー */
 header {
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 12px 16px;
-background: var(–panel);
-border: 1px solid var(–border);
-border-left: 3px solid var(–accent);
-margin-bottom: 12px;
+display: flex; align-items: center; justify-content: space-between;
+padding: 12px 16px; background: var(–panel);
+border: 1px solid var(–border); border-left: 3px solid var(–accent); margin-bottom: 12px;
 }
+.header-title { font-size: 13px; letter-spacing: 3px; color: var(–accent); text-transform: uppercase; }
+.header-sub { font-size: 10px; color: var(–text-dim); letter-spacing: 2px; margin-top: 2px; }
+.clock { font-size: 18px; color: var(–accent); letter-spacing: 2px; font-weight: bold; }
 
-.header-title {
-font-size: 13px;
-letter-spacing: 3px;
-color: var(–accent);
-text-transform: uppercase;
-}
-
-.header-sub {
-font-size: 10px;
-color: var(–text-dim);
-letter-spacing: 2px;
-margin-top: 2px;
-}
-
-.clock {
-font-size: 18px;
-color: var(–accent);
-letter-spacing: 2px;
-font-weight: bold;
-}
-
-/* タブ */
-.tabs {
-display: flex;
-gap: 4px;
-margin-bottom: 12px;
-}
-
+.tabs { display: flex; gap: 4px; margin-bottom: 12px; }
 .tab {
-flex: 1;
-padding: 10px 8px;
-background: var(–panel);
-border: 1px solid var(–border);
-color: var(–text-dim);
-font-family: ‘Courier New’, monospace;
-font-size: 11px;
-letter-spacing: 1px;
-cursor: pointer;
-text-align: center;
-transition: all 0.2s;
-text-transform: uppercase;
+flex: 1; padding: 10px 8px; background: var(–panel); border: 1px solid var(–border);
+color: var(–text-dim); font-family: ‘Courier New’, monospace; font-size: 11px;
+letter-spacing: 1px; cursor: pointer; text-align: center; transition: all 0.2s; text-transform: uppercase;
 }
+.tab.active { border-color: var(–accent); color: var(–accent); background: rgba(0,200,255,0.05); }
 
-.tab.active {
-border-color: var(–accent);
-color: var(–accent);
-background: rgba(0,200,255,0.05);
-}
-
-/* パネル */
-.panel {
-background: var(–panel);
-border: 1px solid var(–border);
-padding: 16px;
-margin-bottom: 12px;
-}
-
+.panel { background: var(–panel); border: 1px solid var(–border); padding: 16px; margin-bottom: 12px; }
 .panel-title {
-font-size: 10px;
-letter-spacing: 3px;
-color: var(–text-dim);
-text-transform: uppercase;
-margin-bottom: 12px;
-padding-bottom: 8px;
-border-bottom: 1px solid var(–border);
+font-size: 10px; letter-spacing: 3px; color: var(–text-dim); text-transform: uppercase;
+margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(–border);
 }
 
-/* スキャンボタン */
 .scan-btn {
-width: 100%;
-padding: 20px;
-background: transparent;
-border: 2px solid var(–accent);
-color: var(–accent);
-font-family: ‘Courier New’, monospace;
-font-size: 14px;
-letter-spacing: 3px;
-cursor: pointer;
-text-transform: uppercase;
-transition: all 0.2s;
-position: relative;
-overflow: hidden;
-margin-bottom: 12px;
+width: 100%; padding: 20px; background: transparent; border: 2px solid var(–accent);
+color: var(–accent); font-family: ‘Courier New’, monospace; font-size: 14px;
+letter-spacing: 3px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; margin-bottom: 12px;
 }
+.scan-btn.scanning { border-color: var(–warn); color: var(–warn); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
-.scan-btn:active {
-background: rgba(0,200,255,0.1);
-}
-
-.scan-btn.scanning {
-border-color: var(–warn);
-color: var(–warn);
-animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-0%, 100% { opacity: 1; }
-50% { opacity: 0.5; }
-}
-
-/* カメラビュー */
 #camera-container {
-display: none;
-width: 100%;
-aspect-ratio: 4/3;
-background: #000;
-border: 1px solid var(–border);
-position: relative;
-overflow: hidden;
-margin-bottom: 12px;
+display: none; width: 100%; aspect-ratio: 4/3; background: #000;
+border: 1px solid var(–border); position: relative; overflow: hidden; margin-bottom: 12px;
 }
-
 #camera-container.active { display: block; }
-
-#interactive {
-width: 100%;
-height: 100%;
-}
-
-#interactive video {
-width: 100%;
-height: 100%;
-object-fit: cover;
-}
-
-#interactive canvas {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-}
-
-.camera-overlay {
-position: absolute;
-inset: 0;
-display: flex;
-align-items: center;
-justify-content: center;
-pointer-events: none;
-}
-
-.scan-line {
-width: 70%;
-height: 2px;
-background: var(–accent);
-box-shadow: 0 0 10px var(–accent);
-animation: scanline 2s ease-in-out infinite;
-}
-
-@keyframes scanline {
-0%, 100% { transform: translateY(-40px); opacity: 0.3; }
-50% { transform: translateY(40px); opacity: 1; }
-}
+#interactive { width: 100%; height: 100%; }
+#interactive video { width: 100%; height: 100%; object-fit: cover; }
+#interactive canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.camera-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.scan-line { width: 70%; height: 2px; background: var(–accent); box-shadow: 0 0 10px var(–accent); animation: scanline 2s ease-in-out infinite; }
+@keyframes scanline { 0%,100%{transform:translateY(-40px);opacity:0.3} 50%{transform:translateY(40px);opacity:1} }
 
 .stop-btn {
-width: 100%;
-padding: 12px;
-background: transparent;
-border: 1px solid var(–danger);
-color: var(–danger);
-font-family: ‘Courier New’, monospace;
-font-size: 12px;
-letter-spacing: 2px;
-cursor: pointer;
-margin-bottom: 12px;
+width: 100%; padding: 12px; background: transparent; border: 1px solid var(–danger);
+color: var(–danger); font-family: ‘Courier New’, monospace; font-size: 12px;
+letter-spacing: 2px; cursor: pointer; margin-bottom: 12px;
 }
 
-/* 手動入力 */
-.input-row {
-display: flex;
-gap: 8px;
-margin-bottom: 12px;
-}
-
+.input-row { display: flex; gap: 8px; margin-bottom: 12px; }
 .manual-input {
-flex: 1;
-background: var(–bg);
-border: 1px solid var(–border);
-color: var(–text);
-font-family: ‘Courier New’, monospace;
-font-size: 14px;
-padding: 12px;
-outline: none;
-letter-spacing: 1px;
+flex: 1; background: var(–bg); border: 1px solid var(–border); color: var(–text);
+font-family: ‘Courier New’, monospace; font-size: 14px; padding: 12px; outline: none; letter-spacing: 1px;
 }
-
-.manual-input:focus {
-border-color: var(–accent);
-}
-
+.manual-input:focus { border-color: var(–accent); }
 .submit-btn {
-padding: 12px 20px;
-background: var(–accent);
-border: none;
-color: var(–bg);
-font-family: ‘Courier New’, monospace;
-font-size: 12px;
-font-weight: bold;
-letter-spacing: 2px;
-cursor: pointer;
+padding: 12px 20px; background: var(–accent); border: none; color: var(–bg);
+font-family: ‘Courier New’, monospace; font-size: 12px; font-weight: bold; letter-spacing: 2px; cursor: pointer;
 }
 
-/* 受注情報表示 */
-.order-card {
-background: var(–bg);
-border: 1px solid var(–border);
-padding: 16px;
-margin-bottom: 12px;
-display: none;
-}
-
+.order-card { background: var(–bg); border: 1px solid var(–border); padding: 16px; margin-bottom: 12px; display: none; }
 .order-card.active { display: block; }
+.order-no { font-size: 20px; color: var(–accent); letter-spacing: 2px; margin-bottom: 8px; }
+.order-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.info-item label { font-size: 9px; color: var(–text-dim); letter-spacing: 2px; text-transform: uppercase; display: block; }
+.info-item span { font-size: 14px; color: var(–text); }
 
-.order-no {
-font-size: 20px;
-color: var(–accent);
-letter-spacing: 2px;
-margin-bottom: 8px;
-}
+.shelf-location { padding: 16px; text-align: center; border: 2px solid; margin-bottom: 12px; }
+.shelf-location.new { border-color: var(–accent2); background: rgba(255,107,53,0.05); }
+.shelf-location.found { border-color: var(–success); background: rgba(0,230,118,0.05); }
+.shelf-label { font-size: 10px; letter-spacing: 3px; margin-bottom: 4px; }
+.shelf-code { font-size: 40px; font-weight: bold; letter-spacing: 4px; }
+.shelf-desc { font-size: 11px; color: var(–text-dim); margin-top: 4px; }
 
-.order-info {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 8px;
-margin-bottom: 12px;
-}
-
-.info-item label {
-font-size: 9px;
-color: var(–text-dim);
-letter-spacing: 2px;
-text-transform: uppercase;
-display: block;
-}
-
-.info-item span {
-font-size: 14px;
-color: var(–text);
-}
-
-/* 棚位置 */
-.shelf-location {
-padding: 16px;
-text-align: center;
-border: 2px solid;
-margin-bottom: 12px;
-}
-
-.shelf-location.new {
-border-color: var(–accent2);
-background: rgba(255,107,53,0.05);
-}
-
-.shelf-location.found {
-border-color: var(–success);
-background: rgba(0,230,118,0.05);
-}
-
-.shelf-label {
-font-size: 10px;
-letter-spacing: 3px;
-margin-bottom: 4px;
-}
-
-.shelf-code {
-font-size: 40px;
-font-weight: bold;
-letter-spacing: 4px;
-}
-
-.shelf-desc {
-font-size: 11px;
-color: var(–text-dim);
-margin-top: 4px;
-}
-
-/* アクションボタン */
-.action-btns {
-display: flex;
-gap: 8px;
-margin-bottom: 12px;
-}
-
+.action-btns { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
 .action-btn {
-flex: 1;
-padding: 14px;
-border: 1px solid;
-background: transparent;
-font-family: ‘Courier New’, monospace;
-font-size: 11px;
-letter-spacing: 2px;
-cursor: pointer;
-text-transform: uppercase;
+flex: 1; padding: 14px; border: 1px solid; background: transparent;
+font-family: ‘Courier New’, monospace; font-size: 11px; letter-spacing: 2px;
+cursor: pointer; text-transform: uppercase; min-width: 120px;
+}
+.action-btn.register { border-color: var(–accent2); color: var(–accent2); }
+.action-btn.complete { border-color: var(–success); color: var(–success); }
+.action-btn:active { opacity: 0.7; }
+.reg-select {
+flex: 1; background: var(–bg); border: 1px solid var(–border); color: var(–text);
+font-family: ‘Courier New’, monospace; font-size: 12px; padding: 10px; outline: none;
 }
 
-.action-btn.register {
-border-color: var(–accent2);
-color: var(–accent2);
-}
-
-.action-btn.complete {
-border-color: var(–success);
-color: var(–success);
-}
-
-.action-btn:active {
-opacity: 0.7;
-}
-
-/* 棚ビュー */
+/* 棚グリッド */
+.shelf-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .shelf-grid {
 display: grid;
-grid-template-columns: 80px repeat(4, 1fr);
-gap: 4px;
-margin-bottom: 12px;
+grid-template-columns: 70px repeat(10, minmax(48px, 1fr));
+gap: 3px;
+min-width: 580px;
 }
 
-.shelf-header {
-font-size: 9px;
-color: var(–text-dim);
-text-align: center;
-padding: 6px 2px;
-letter-spacing: 1px;
-}
+.shelf-header { font-size: 8px; text-align: center; padding: 4px 2px; letter-spacing: 0.5px; line-height: 1.4; }
+.shelf-header.type-overdue { color: var(–danger); }
+.shelf-header.type-past    { color: var(–text-dim); }
+.shelf-header.type-today   { color: var(–warn); font-weight: bold; }
+.shelf-header.type-future  { color: var(–text-dim); }
 
 .shelf-cat-label {
-font-size: 9px;
-padding: 8px 4px;
-display: flex;
-align-items: center;
-border-left: 3px solid;
-padding-left: 6px;
+font-size: 8px; padding: 6px 3px; display: flex; align-items: center;
+border-left: 3px solid; padding-left: 5px; line-height: 1.3;
 }
 
 .shelf-cell {
-background: var(–bg);
-border: 1px solid var(–border);
-padding: 6px 4px;
-min-height: 60px;
-cursor: pointer;
-transition: all 0.2s;
-position: relative;
-overflow: hidden;
+background: var(–bg); border: 1px solid var(–border);
+padding: 4px 3px; min-height: 50px; cursor: pointer; transition: all 0.15s;
 }
+.shelf-cell:active { opacity: 0.7; }
+.shelf-cell.has-items { border-color: var(–accent); }
+.shelf-cell.type-overdue { background: rgba(255,61,61,0.04); border-color: rgba(255,61,61,0.2); }
+.shelf-cell.type-overdue.has-items { border-color: var(–danger); }
+.shelf-cell.type-today { background: rgba(255,179,0,0.04); }
+.shelf-cell.type-today.has-items { border-color: var(–warn); }
+.shelf-cell.highlighted { border-color: var(–accent2); background: rgba(255,107,53,0.15); animation: hl 0.4s ease; }
+@keyframes hl { 0%{transform:scale(1.06)} 100%{transform:scale(1)} }
 
-.shelf-cell:hover {
-border-color: var(–text-dim);
-}
+.cell-count { font-size: 15px; font-weight: bold; text-align: center; color: var(–text-dim); }
+.cell-count.has { color: var(–accent); }
+.cell-count.overdue { color: var(–danger); }
+.cell-count.today { color: var(–warn); }
+.cell-items { font-size: 7px; color: var(–text-dim); line-height: 1.3; margin-top: 2px; }
 
-.shelf-cell.has-items {
-border-color: var(–accent);
-}
+.legend { display: flex; gap: 16px; padding: 8px 12px; background: var(–panel); border: 1px solid var(–border); margin-bottom: 12px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-.shelf-cell.highlighted {
-border-color: var(–accent2);
-background: rgba(255,107,53,0.1);
-animation: highlight 0.5s ease;
-}
-
-@keyframes highlight {
-0% { transform: scale(1.05); }
-100% { transform: scale(1); }
-}
-
-.cell-count {
-font-size: 18px;
-font-weight: bold;
-color: var(–accent);
-text-align: center;
-}
-
-.cell-items {
-font-size: 8px;
-color: var(–text-dim);
-line-height: 1.4;
-margin-top: 2px;
-}
-
-/* ログ */
-.log-list {
-list-style: none;
-max-height: 300px;
-overflow-y: auto;
-}
-
-.log-item {
-padding: 8px 0;
-border-bottom: 1px solid var(–border);
-font-size: 11px;
-display: flex;
-gap: 8px;
-align-items: flex-start;
-}
-
-.log-time {
-color: var(–text-dim);
-white-space: nowrap;
-font-size: 10px;
-}
-
+.log-list { list-style: none; max-height: 300px; overflow-y: auto; }
+.log-item { padding: 8px 0; border-bottom: 1px solid var(–border); font-size: 11px; display: flex; gap: 8px; align-items: flex-start; }
+.log-time { color: var(–text-dim); white-space: nowrap; font-size: 10px; }
 .log-content { flex: 1; }
-
-.log-badge {
-font-size: 9px;
-padding: 2px 6px;
-border: 1px solid;
-white-space: nowrap;
-}
-
+.log-badge { font-size: 9px; padding: 2px 6px; border: 1px solid; white-space: nowrap; }
 .log-badge.in { border-color: var(–accent2); color: var(–accent2); }
 .log-badge.out { border-color: var(–success); color: var(–success); }
 
-/* GS設定 */
 .gs-input {
-width: 100%;
-background: var(–bg);
-border: 1px solid var(–border);
-color: var(–text);
-font-family: ‘Courier New’, monospace;
-font-size: 12px;
-padding: 10px;
-outline: none;
-margin-bottom: 8px;
+width: 100%; background: var(–bg); border: 1px solid var(–border); color: var(–text);
+font-family: ‘Courier New’, monospace; font-size: 12px; padding: 10px; outline: none; margin-bottom: 8px;
 }
-
 .gs-input:focus { border-color: var(–accent); }
+.gs-btn { padding: 10px 20px; background: transparent; border: 1px solid var(–accent); color: var(–accent); font-family: ‘Courier New’, monospace; font-size: 11px; letter-spacing: 2px; cursor: pointer; }
 
-.gs-btn {
-padding: 10px 20px;
-background: transparent;
-border: 1px solid var(–accent);
-color: var(–accent);
-font-family: ‘Courier New’, monospace;
-font-size: 11px;
-letter-spacing: 2px;
-cursor: pointer;
-}
-
-/* トースト */
 .toast {
-position: fixed;
-bottom: 20px;
-left: 50%;
-transform: translateX(-50%);
-background: var(–panel);
-border: 1px solid var(–accent);
-color: var(–accent);
-padding: 12px 24px;
-font-size: 12px;
-letter-spacing: 2px;
-z-index: 1000;
-opacity: 0;
-transition: opacity 0.3s;
-white-space: nowrap;
+position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+background: var(–panel); border: 1px solid var(–accent); color: var(–accent);
+padding: 12px 24px; font-size: 12px; letter-spacing: 1px; z-index: 1000;
+opacity: 0; transition: opacity 0.3s; white-space: nowrap; max-width: 90vw; overflow: hidden; text-overflow: ellipsis;
 }
-
 .toast.show { opacity: 1; }
 .toast.error { border-color: var(–danger); color: var(–danger); }
 .toast.success { border-color: var(–success); color: var(–success); }
 
 .page { display: none; }
 .page.active { display: block; }
-
-/* スピナー */
-.spinner {
-display: inline-block;
-width: 12px;
-height: 12px;
-border: 2px solid var(–border);
-border-top-color: var(–accent);
-border-radius: 50%;
-animation: spin 0.8s linear infinite;
-margin-right: 6px;
-vertical-align: middle;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 
 </head>
@@ -565,308 +222,236 @@ vertical-align: middle;
   </header>
 
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('scan')">スキャン</button>
-    <button class="tab" onclick="switchTab('shelf')">棚ビュー</button>
-    <button class="tab" onclick="switchTab('log')">ログ</button>
-    <button class="tab" onclick="switchTab('settings')">設定</button>
+    <button class="tab active" onclick="switchTab('scan',this)">スキャン</button>
+    <button class="tab" onclick="switchTab('shelf',this)">棚ビュー</button>
+    <button class="tab" onclick="switchTab('log',this)">ログ</button>
+    <button class="tab" onclick="switchTab('settings',this)">設定</button>
   </div>
 
-  <!-- スキャンページ -->
+  <!-- スキャン -->
 
   <div class="page active" id="page-scan">
+    <div class="panel">
+      <div class="panel-title">バーコードスキャン</div>
+      <button class="scan-btn" id="scan-btn" onclick="toggleCamera()">📷 カメラでスキャン</button>
+      <div id="camera-container">
+        <div id="interactive"></div>
+        <div class="camera-overlay"><div class="scan-line"></div></div>
+      </div>
+      <button class="stop-btn" id="stop-btn" style="display:none" onclick="stopCamera()">■ スキャン停止</button>
+      <div class="input-row">
+        <input class="manual-input" id="manual-input" type="text" placeholder="受注No. 手動入力..." maxlength="20"
+          onkeydown="if(event.key==='Enter') processOrderNo()">
+        <button class="submit-btn" onclick="processOrderNo()">検索</button>
+      </div>
+    </div>
 
 ```
-<div class="panel">
-  <div class="panel-title">バーコードスキャン</div>
-
-  <button class="scan-btn" id="scan-btn" onclick="toggleCamera()">
-    📷 カメラでスキャン
-  </button>
-
-  <div id="camera-container">
-    <div id="interactive"></div>
-    <div class="camera-overlay">
-      <div class="scan-line"></div>
-    </div>
-  </div>
-
-  <button class="stop-btn" id="stop-btn" style="display:none" onclick="stopCamera()">
-    ■ スキャン停止
-  </button>
-
-  <div class="input-row">
-    <input class="manual-input" id="manual-input" type="text"
-      placeholder="受注No. を手動入力..." maxlength="20"
-      onkeydown="if(event.key==='Enter') processOrderNo()">
-    <button class="submit-btn" onclick="processOrderNo()">検索</button>
-  </div>
-</div>
-
-<!-- 受注情報カード -->
 <div class="order-card" id="order-card">
   <div class="order-no" id="result-orderno"></div>
   <div class="order-info">
-    <div class="info-item">
-      <label>品名</label>
-      <span id="result-name">-</span>
-    </div>
-    <div class="info-item">
-      <label>カテゴリ</label>
-      <span id="result-cat">-</span>
-    </div>
-    <div class="info-item">
-      <label>仮付け日</label>
-      <span id="result-date">-</span>
-    </div>
-    <div class="info-item">
-      <label>状態</label>
-      <span id="result-status">-</span>
-    </div>
+    <div class="info-item"><label>品名</label><span id="result-name">-</span></div>
+    <div class="info-item"><label>カテゴリ</label><span id="result-cat">-</span></div>
+    <div class="info-item"><label>仮付け日</label><span id="result-date">-</span></div>
+    <div class="info-item"><label>状態</label><span id="result-status">-</span></div>
   </div>
-
   <div class="shelf-location" id="shelf-location">
     <div class="shelf-label" id="shelf-label">棚位置</div>
     <div class="shelf-code" id="shelf-code">--</div>
     <div class="shelf-desc" id="shelf-desc"></div>
   </div>
-
   <div class="action-btns" id="action-btns"></div>
 </div>
 ```
 
   </div>
 
-  <!-- 棚ビューページ -->
+  <!-- 棚ビュー -->
 
   <div class="page" id="page-shelf">
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--danger)"></div><span style="color:var(--danger)">遅延</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">今日</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div><span>予定</span></div>
+    </div>
     <div class="panel">
-      <div class="panel-title">棚マップ（カテゴリ × 着工日）</div>
-      <div class="shelf-grid" id="shelf-grid"></div>
+      <div class="panel-title">棚マップ（← 遅延　今日　予定 →）　← 横スクロール</div>
+      <div class="shelf-wrapper">
+        <div class="shelf-grid" id="shelf-grid"></div>
+      </div>
     </div>
   </div>
 
-  <!-- ログページ -->
+  <!-- ログ -->
 
   <div class="page" id="page-log">
     <div class="panel">
       <div class="panel-title">操作ログ</div>
-      <ul class="log-list" id="log-list">
-        <li class="log-item" style="color:var(--text-dim)">ログなし</li>
-      </ul>
+      <ul class="log-list" id="log-list"><li class="log-item" style="color:var(--text-dim)">ログなし</li></ul>
     </div>
   </div>
 
-  <!-- 設定ページ -->
+  <!-- 設定 -->
 
   <div class="page" id="page-settings">
     <div class="panel">
       <div class="panel-title">Googleスプレッドシート連携</div>
-      <p style="font-size:11px;color:var(--text-dim);margin-bottom:12px;line-height:1.8">
-        スプレッドシートのApps ScriptでWebアプリを公開し、<br>
-        そのURLを以下に入力してください。
-      </p>
-      <input class="gs-input" id="gs-url" type="url"
-        placeholder="https://script.google.com/macros/s/.../exec">
+      <input class="gs-input" id="gs-url" type="url" placeholder="Apps Script WebアプリURL">
       <button class="gs-btn" onclick="saveSettings()">保存</button>
     </div>
-
-```
-<div class="panel">
-  <div class="panel-title">棚の日付設定</div>
-  <p style="font-size:11px;color:var(--text-dim);margin-bottom:12px">
-    列1〜4に対応する日付ラベルを設定します。
-  </p>
-  <div id="date-inputs"></div>
-  <button class="gs-btn" onclick="saveDates()">保存</button>
-</div>
-
-<div class="panel">
-  <div class="panel-title">Apps Script コード</div>
-  <p style="font-size:11px;color:var(--text-dim);margin-bottom:12px;line-height:1.8">
-    スプレッドシートに以下のApps Scriptを設定してください。<br>
-    シート名：<strong style="color:var(--accent)">shelf_data</strong><br>
-    列構成：A=受注No / B=品名 / C=カテゴリ / D=仮付け日 / E=棚コード / F=状態
-  </p>
-  <div style="background:var(--bg);border:1px solid var(--border);padding:12px;font-size:10px;color:var(--text-dim);line-height:1.8;overflow-x:auto;white-space:pre" id="script-sample"></div>
-  <button class="gs-btn" style="margin-top:8px" onclick="copyScript()">コピー</button>
-</div>
-```
-
+    <div class="panel">
+      <div class="panel-title">Apps Script コード</div>
+      <p style="font-size:11px;color:var(--text-dim);margin-bottom:12px;line-height:1.8">
+        シート名：<strong style="color:var(--accent)">shelf_data</strong><br>
+        列：A=受注No / B=品名 / C=カテゴリ / D=仮付け日 / E=棚コード / F=状態 / G=登録日時 / H=完了日時
+      </p>
+      <div style="background:var(--bg);border:1px solid var(--border);padding:12px;font-size:10px;color:var(--text-dim);line-height:1.8;overflow-x:auto;white-space:pre" id="script-sample"></div>
+      <button class="gs-btn" style="margin-top:8px" onclick="copyScript()">コピー</button>
+    </div>
   </div>
 
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== 設定 =====
 const CATEGORIES = [
-  { id: 'blast',  label: 'ブラスト',     color: 'var(--cat-blast)' },
-  { id: 'iron',   label: '鉄',           color: 'var(--cat-iron)'  },
-  { id: 'hontai', label: 'ホンタイ',     color: 'var(--cat-hontai)'},
-  { id: 'frame',  label: 'フレームホンタイ', color: 'var(--cat-frame)'},
-  { id: 'sus',    label: 'SUS',          color: 'var(--cat-sus)'   },
+  { id:'blast',  label:'ブラスト',       color:'var(--cat-blast)'  },
+  { id:'iron',   label:'鉄',             color:'var(--cat-iron)'   },
+  { id:'hontai', label:'ホンタイ',       color:'var(--cat-hontai)' },
+  { id:'frame',  label:'フレームホンタイ', color:'var(--cat-frame)'  },
+  { id:'sus',    label:'SUS',            color:'var(--cat-sus)'    },
 ];
 
-// カテゴリ判定（品名・処理から推定）
-function guessCategory(name='', process='') {
-  const n = name + process;
-  if (n.includes('SUS') || n.includes('ステン')) return 'sus';
-  if (n.includes('フレーム')) return 'frame';
-  if (n.includes('ホンタイ') || n.includes('本体')) return 'hontai';
-  if (n.includes('ブラスト') || n.includes('blast')) return 'blast';
-  return 'iron';
+// 列: overdue=遅延以前, -1=前日, 0=今日, 1〜7=翌日以降
+const COLS = [
+  { key:'overdue', type:'overdue' },
+  { key:'-1',      type:'past'   },
+  { key:'0',       type:'today'  },
+  { key:'1',       type:'future' },
+  { key:'2',       type:'future' },
+  { key:'3',       type:'future' },
+  { key:'4',       type:'future' },
+  { key:'5',       type:'future' },
+  { key:'6',       type:'future' },
+  { key:'7',       type:'future' },
+];
+
+function getToday() {
+  const d = new Date();
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+function offsetToDate(offset) {
+  const d = getToday();
+  d.setDate(d.getDate() + offset);
+  return d;
+}
+function formatMD(date) { return `${date.getMonth()+1}/${date.getDate()}`; }
+
+function getColHeaderHTML(col) {
+  if (col.key === 'overdue') return '遅延<br>以前';
+  const offset = parseInt(col.key);
+  const md = formatMD(offsetToDate(offset));
+  const lbl = offset === -1 ? '前日' : offset === 0 ? '今日' : offset === 1 ? '明日' : offset === 2 ? '明後日' : `+${offset}日`;
+  return `${md}<br><span style="font-size:7px">${lbl}</span>`;
+}
+
+function getShelfCode(catId, colKey) {
+  const ci = CATEGORIES.findIndex(c => c.id === catId);
+  const di = COLS.findIndex(c => c.key === colKey);
+  return `${String.fromCharCode(65+ci)}${di+1}`;
+}
+
+function dateToColKey(dateStr) {
+  if (!dateStr) return null;
+  const parts = dateStr.split('/');
+  if (parts.length < 2) return null;
+  const today = getToday();
+  const target = new Date(today.getFullYear(), parseInt(parts[0])-1, parseInt(parts[1]));
+  const diff = Math.round((target - today) / 86400000);
+  if (diff < -1) return 'overdue';
+  if (diff > 7) return '7';
+  return String(diff);
 }
 
 let gsUrl = localStorage.getItem('gsUrl') || '';
-let dates = JSON.parse(localStorage.getItem('shelfDates') || 'null') || getDefaultDates();
 let shelfData = JSON.parse(localStorage.getItem('shelfData') || '{}');
 let logs = JSON.parse(localStorage.getItem('shelfLogs') || '[]');
 let scanning = false;
 let currentOrder = null;
 
-function getDefaultDates() {
-  const d = [];
-  const today = new Date();
-  for (let i = 0; i < 4; i++) {
-    const dt = new Date(today);
-    dt.setDate(today.getDate() + i);
-    d.push(formatDate(dt));
-  }
-  return d;
-}
-
-function formatDate(d) {
-  return `${d.getMonth()+1}/${d.getDate()}`;
-}
-
-function getShelfCode(catId, dateIdx) {
-  return `${catId.toUpperCase()[0]}${dateIdx+1}`;
-}
-
-// ===== 時計 =====
+// 時計
 function updateClock() {
-  const now = new Date();
+  const n = new Date();
   document.getElementById('clock').textContent =
-    `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+    `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
 }
-setInterval(updateClock, 1000);
-updateClock();
+setInterval(updateClock, 1000); updateClock();
 
-// ===== タブ =====
-function switchTab(tab) {
+// タブ
+function switchTab(tab, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
-  event.target.classList.add('active');
-  if (tab === 'shelf') renderShelfGrid();
-  if (tab === 'log') renderLog();
-  if (tab === 'settings') renderSettings();
+  el.classList.add('active');
+  if (tab==='shelf') renderShelfGrid();
+  if (tab==='log') renderLog();
+  if (tab==='settings') renderSettings();
 }
 
-// ===== カメラ =====
-function toggleCamera() {
-  if (scanning) { stopCamera(); return; }
-  startCamera();
-}
+// カメラ
+function toggleCamera() { scanning ? stopCamera() : startCamera(); }
 
 function startCamera() {
-  const container = document.getElementById('camera-container');
+  document.getElementById('camera-container').classList.add('active');
   const btn = document.getElementById('scan-btn');
-  const stopBtn = document.getElementById('stop-btn');
-
-  container.classList.add('active');
-  btn.classList.add('scanning');
-  btn.textContent = '📷 スキャン中...';
-  stopBtn.style.display = 'block';
+  btn.classList.add('scanning'); btn.textContent = '📷 スキャン中...';
+  document.getElementById('stop-btn').style.display = 'block';
   scanning = true;
-
   Quagga.init({
-    inputStream: {
-      name: 'Live',
-      type: 'LiveStream',
-      target: document.getElementById('interactive'),
-      constraints: {
-        facingMode: 'environment',
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-      },
-    },
-    decoder: {
-      readers: ['code_128_reader', 'code_39_reader', 'ean_reader', 'ean_8_reader'],
-    },
+    inputStream: { name:'Live', type:'LiveStream', target: document.getElementById('interactive'),
+      constraints: { facingMode:'environment', width:{ideal:1280}, height:{ideal:720} } },
+    decoder: { readers:['code_128_reader','code_39_reader','ean_reader'] },
     locate: true,
   }, err => {
-    if (err) {
-      showToast('カメラエラー: ' + err.message, 'error');
-      stopCamera();
-      return;
-    }
+    if (err) { showToast('カメラエラー: '+err.message,'error'); stopCamera(); return; }
     Quagga.start();
   });
-
   Quagga.onDetected(result => {
     const code = result.codeResult.code;
-    if (code) {
-      stopCamera();
-      document.getElementById('manual-input').value = code;
-      processOrderNo(code);
-    }
+    if (code) { stopCamera(); document.getElementById('manual-input').value = code; processOrderNo(code); }
   });
 }
 
 function stopCamera() {
-  Quagga.stop();
-  scanning = false;
+  Quagga.stop(); scanning = false;
   document.getElementById('camera-container').classList.remove('active');
-  document.getElementById('scan-btn').classList.remove('scanning');
-  document.getElementById('scan-btn').textContent = '📷 カメラでスキャン';
+  const btn = document.getElementById('scan-btn');
+  btn.classList.remove('scanning'); btn.textContent = '📷 カメラでスキャン';
   document.getElementById('stop-btn').style.display = 'none';
 }
 
-// ===== 受注処理 =====
+// 受注処理
 async function processOrderNo(forceNo) {
   const orderNo = forceNo || document.getElementById('manual-input').value.trim();
-  if (!orderNo) { showToast('受注No.を入力してください', 'error'); return; }
+  if (!orderNo) { showToast('受注No.を入力してください','error'); return; }
 
-  // GSから取得 or ローカルデータ
   let order = shelfData[orderNo];
-
   if (!order && gsUrl) {
-    showToast('データ取得中...', '');
+    showToast('データ取得中...','');
     try {
       const res = await fetch(`${gsUrl}?action=get&orderNo=${encodeURIComponent(orderNo)}`);
       const data = await res.json();
-      if (data.success && data.order) {
-        order = data.order;
-        shelfData[orderNo] = order;
-        saveLocal();
-      }
-    } catch(e) {
-      showToast('GS接続エラー（オフラインで継続）', 'error');
-    }
+      if (data.success && data.order) { order = data.order; shelfData[orderNo] = order; saveLocal(); }
+    } catch(e) { showToast('GS接続エラー（オフラインで継続）','error'); }
   }
 
-  if (!order) {
-    // 新規登録モード
-    order = {
-      orderNo,
-      name: '',
-      category: '',
-      date: '',
-      shelfCode: '',
-      status: 'new'
-    };
-  }
-
+  if (!order) order = { orderNo, name:'', category:'', date:'', shelfCode:'', status:'new' };
   currentOrder = order;
   renderOrderCard(order);
 }
 
 function renderOrderCard(order) {
-  const card = document.getElementById('order-card');
-  card.classList.add('active');
-
+  document.getElementById('order-card').classList.add('active');
   document.getElementById('result-orderno').textContent = order.orderNo;
   document.getElementById('result-name').textContent = order.name || '（未登録）';
   document.getElementById('result-cat').textContent = getCatLabel(order.category) || '（未設定）';
@@ -876,76 +461,79 @@ function renderOrderCard(order) {
   const code = document.getElementById('shelf-code');
   const desc = document.getElementById('shelf-desc');
   const label = document.getElementById('shelf-label');
-  const status = document.getElementById('result-status');
+  const statusEl = document.getElementById('result-status');
   const btns = document.getElementById('action-btns');
 
   if (order.status === 'new') {
-    // 新規登録
-    status.textContent = '新規';
-    status.style.color = 'var(--accent2)';
+    statusEl.textContent = '新規'; statusEl.style.color = 'var(--accent2)';
     loc.className = 'shelf-location new';
     label.textContent = '事前配布を登録';
-    code.textContent = '未登録';
-    desc.textContent = 'カテゴリと仮付け日を設定して棚に登録';
+    code.textContent = '未登録'; code.style.color = 'var(--accent2)';
+    desc.textContent = 'カテゴリと仮付け日を選んで登録';
+
+    // 日付選択肢
+    const dateOpts = COLS.map(col => {
+      let lbl;
+      if (col.key === 'overdue') lbl = '遅延以前';
+      else if (col.key === '-1') lbl = `前日 ${formatMD(offsetToDate(-1))}`;
+      else if (col.key === '0') lbl = `今日 ${formatMD(offsetToDate(0))}`;
+      else lbl = `${formatMD(offsetToDate(parseInt(col.key)))} (+${col.key}日)`;
+      return `<option value="${col.key}">${lbl}</option>`;
+    }).join('');
+
     btns.innerHTML = `
-      <select id="cat-select" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:Courier New,monospace;font-size:12px;padding:10px;outline:none">
+      <select class="reg-select" id="cat-select">
         <option value="">カテゴリ選択...</option>
-        ${CATEGORIES.map(c => `<option value="${c.id}">${c.label}</option>`).join('')}
+        ${CATEGORIES.map(c=>`<option value="${c.id}">${c.label}</option>`).join('')}
       </select>
-      <select id="date-select" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:Courier New,monospace;font-size:12px;padding:10px;outline:none">
-        ${dates.map((d,i) => `<option value="${i}">${d}</option>`).join('')}
-      </select>
-      <button class="action-btn register" onclick="registerOrder()" style="flex:none;padding:10px 16px">登録</button>
+      <select class="reg-select" id="date-select">${dateOpts}</select>
+      <button class="action-btn register" onclick="registerOrder()">棚に登録</button>
     `;
+    // 仮付け日が既知なら自動選択
+    if (order.date) {
+      const ck = dateToColKey(order.date);
+      if (ck) document.getElementById('date-select').value = ck;
+    }
 
   } else if (order.status === 'registered') {
-    // 登録済み（事前配布）
-    status.textContent = '事前配布済';
-    status.style.color = 'var(--accent)';
+    statusEl.textContent = '事前配布済'; statusEl.style.color = 'var(--accent)';
     loc.className = 'shelf-location new';
-    label.textContent = '事前配布の棚位置';
-    code.textContent = order.shelfCode;
-    code.style.color = 'var(--accent2)';
+    label.textContent = '棚位置';
+    code.textContent = order.shelfCode; code.style.color = 'var(--accent2)';
     desc.textContent = `${getCatLabel(order.category)} / 仮付け ${order.date}`;
-    btns.innerHTML = `
-      <button class="action-btn complete" onclick="completeOrder()" style="flex:1">
-        ✓ 前工程到着 → 突き合わせ完了
-      </button>
-    `;
+    btns.innerHTML = `<button class="action-btn complete" onclick="completeOrder()" style="flex:1">✓ 前工程到着 → 突き合わせ完了</button>`;
     highlightShelfCell(order.shelfCode);
 
   } else if (order.status === 'completed') {
-    // 突き合わせ完了
-    status.textContent = '突き合わせ完了';
-    status.style.color = 'var(--success)';
+    statusEl.textContent = '突き合わせ完了'; statusEl.style.color = 'var(--success)';
     loc.className = 'shelf-location found';
     label.textContent = '突き合わせ済み';
-    code.textContent = order.shelfCode;
-    code.style.color = 'var(--success)';
-    desc.textContent = `完了済み / ${order.completedAt || ''}`;
+    code.textContent = order.shelfCode; code.style.color = 'var(--success)';
+    desc.textContent = `完了 ${order.completedAt||''}`;
     btns.innerHTML = '';
   }
 }
 
-function getCatLabel(catId) {
-  return CATEGORIES.find(c => c.id === catId)?.label || catId;
-}
+function getCatLabel(catId) { return CATEGORIES.find(c=>c.id===catId)?.label || catId; }
 
 function registerOrder() {
   const catId = document.getElementById('cat-select').value;
-  const dateIdx = parseInt(document.getElementById('date-select').value);
-  if (!catId) { showToast('カテゴリを選択してください', 'error'); return; }
+  const colKey = document.getElementById('date-select').value;
+  if (!catId) { showToast('カテゴリを選択してください','error'); return; }
 
-  const shelfCode = getShelfCode(catId, dateIdx);
+  const shelfCode = getShelfCode(catId, colKey);
+  const dateLabel = colKey==='overdue' ? '遅延以前' : formatMD(offsetToDate(parseInt(colKey)));
+
   currentOrder.category = catId;
-  currentOrder.date = dates[dateIdx];
+  currentOrder.date = currentOrder.date || dateLabel;
   currentOrder.shelfCode = shelfCode;
   currentOrder.status = 'registered';
+  currentOrder.registeredAt = new Date().toLocaleTimeString('ja-JP');
 
   shelfData[currentOrder.orderNo] = currentOrder;
   saveLocal();
   syncToGS('register', currentOrder);
-  addLog('in', currentOrder.orderNo, shelfCode, getCatLabel(catId), dates[dateIdx]);
+  addLog('in', currentOrder.orderNo, shelfCode, getCatLabel(catId), currentOrder.date);
   renderOrderCard(currentOrder);
   showToast(`棚 ${shelfCode} に登録しました`, 'success');
 }
@@ -961,189 +549,139 @@ function completeOrder() {
   showToast('突き合わせ完了！', 'success');
 }
 
-// ===== 棚グリッド =====
+// 棚グリッド
 function renderShelfGrid() {
   const grid = document.getElementById('shelf-grid');
   grid.innerHTML = '';
 
-  // ヘッダー行
+  // ヘッダー
   grid.innerHTML += '<div class="shelf-header"></div>';
-  dates.forEach((d,i) => {
-    grid.innerHTML += `<div class="shelf-header">${d}<br><span style="font-size:8px;color:var(--text-dim)">${getDayLabel(i)}</span></div>`;
+  COLS.forEach(col => {
+    grid.innerHTML += `<div class="shelf-header type-${col.type}">${getColHeaderHTML(col)}</div>`;
   });
 
-  // カテゴリ行
+  // カテゴリ×列
   CATEGORIES.forEach(cat => {
     grid.innerHTML += `<div class="shelf-cat-label" style="border-color:${cat.color};color:${cat.color}">${cat.label}</div>`;
-    dates.forEach((d,di) => {
-      const code = getShelfCode(cat.id, di);
-      const items = getShelfItems(cat.id, di);
+    COLS.forEach(col => {
+      const code = getShelfCode(cat.id, col.key);
+      const items = getShelfItems(code);
       const count = items.length;
+      const countClass = count > 0 ? (col.type==='overdue'?'overdue':col.type==='today'?'today':'has') : '';
       grid.innerHTML += `
-        <div class="shelf-cell ${count > 0 ? 'has-items' : ''}" id="cell-${code}" onclick="showCellDetail('${code}')">
-          <div class="cell-count" style="${count > 0 ? `color:${cat.color}` : 'color:var(--text-dim)'}">${count || '－'}</div>
-          <div class="cell-items">${items.slice(0,3).map(o => o.orderNo.slice(-4)).join('<br>')}</div>
-        </div>
-      `;
+        <div class="shelf-cell type-${col.type} ${count>0?'has-items':''}" id="cell-${code}" onclick="showCellDetail('${code}')">
+          <div class="cell-count ${countClass}" style="${count>0&&!['overdue','today'].includes(col.type)?`color:${cat.color}`:''}">
+            ${count||'－'}
+          </div>
+          <div class="cell-items">${items.slice(0,3).map(o=>o.orderNo.slice(-4)).join('<br>')}</div>
+        </div>`;
     });
   });
 }
 
-function getDayLabel(i) {
-  return ['今日','明日','明後日','+3日'][i] || `+${i}日`;
-}
-
-function getShelfItems(catId, dateIdx) {
-  const code = getShelfCode(catId, dateIdx);
-  return Object.values(shelfData).filter(o => o.shelfCode === code && o.status === 'registered');
+function getShelfItems(code) {
+  return Object.values(shelfData).filter(o => o.shelfCode===code && o.status==='registered');
 }
 
 function highlightShelfCell(code) {
   setTimeout(() => {
     const cell = document.getElementById('cell-'+code);
-    if (cell) {
-      cell.classList.add('highlighted');
-      setTimeout(() => cell.classList.remove('highlighted'), 2000);
-    }
+    if (cell) { cell.classList.add('highlighted'); setTimeout(()=>cell.classList.remove('highlighted'),2000); }
   }, 300);
 }
 
 function showCellDetail(code) {
-  const items = Object.values(shelfData).filter(o => o.shelfCode === code && o.status === 'registered');
-  if (items.length === 0) {
-    showToast(`${code}：空き`, '');
-  } else {
-    showToast(`${code}：${items.map(o=>o.orderNo).join(', ')}`, '');
-  }
+  const items = getShelfItems(code);
+  if (items.length===0) showToast(`${code}：空き`,'');
+  else showToast(`${code}(${items.length}件)：${items.slice(0,4).map(o=>o.orderNo.slice(-6)).join(' ')}`, '');
 }
 
-// ===== ログ =====
+// ログ
 function addLog(type, orderNo, shelf, cat, date) {
-  const now = new Date();
-  logs.unshift({
-    type, orderNo, shelf, cat, date,
-    time: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`
-  });
-  if (logs.length > 100) logs.pop();
+  const n = new Date();
+  logs.unshift({ type, orderNo, shelf, cat, date, time:`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}` });
+  if (logs.length>200) logs.pop();
   localStorage.setItem('shelfLogs', JSON.stringify(logs));
 }
 
 function renderLog() {
   const list = document.getElementById('log-list');
-  if (logs.length === 0) {
-    list.innerHTML = '<li class="log-item" style="color:var(--text-dim)">ログなし</li>';
-    return;
-  }
-  list.innerHTML = logs.map(l => `
+  if (!logs.length) { list.innerHTML='<li class="log-item" style="color:var(--text-dim)">ログなし</li>'; return; }
+  list.innerHTML = logs.map(l=>`
     <li class="log-item">
       <span class="log-time">${l.time}</span>
       <div class="log-content">
         <div>${l.orderNo}</div>
         <div style="color:var(--text-dim);font-size:9px">${l.cat} / ${l.date} / 棚${l.shelf}</div>
       </div>
-      <span class="log-badge ${l.type}">${l.type === 'in' ? '事前登録' : '突き合わせ完了'}</span>
-    </li>
-  `).join('');
+      <span class="log-badge ${l.type}">${l.type==='in'?'事前登録':'完了'}</span>
+    </li>`).join('');
 }
 
-// ===== 設定 =====
+// 設定
 function renderSettings() {
   document.getElementById('gs-url').value = gsUrl;
-
-  const dateInputs = document.getElementById('date-inputs');
-  dateInputs.innerHTML = dates.map((d,i) => `
-    <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
-      <span style="font-size:10px;color:var(--text-dim);width:40px">列${i+1}</span>
-      <input class="gs-input" style="margin:0;flex:1" value="${d}"
-        id="date-input-${i}" placeholder="${getDayLabel(i)}">
-    </div>
-  `).join('');
-
   document.getElementById('script-sample').textContent = getScriptSample();
 }
-
-function saveSettings() {
-  gsUrl = document.getElementById('gs-url').value.trim();
-  localStorage.setItem('gsUrl', gsUrl);
-  showToast('設定を保存しました', 'success');
-}
-
-function saveDates() {
-  dates = Array.from({length:4}, (_,i) => document.getElementById(`date-input-${i}`).value.trim() || getDayLabel(i));
-  localStorage.setItem('shelfDates', JSON.stringify(dates));
-  showToast('日付を保存しました', 'success');
-}
-
-function copyScript() {
-  navigator.clipboard.writeText(getScriptSample()).then(() => showToast('コピーしました', 'success'));
-}
+function saveSettings() { gsUrl=document.getElementById('gs-url').value.trim(); localStorage.setItem('gsUrl',gsUrl); showToast('保存しました','success'); }
+function copyScript() { navigator.clipboard.writeText(getScriptSample()).then(()=>showToast('コピーしました','success')); }
 
 function getScriptSample() {
   return `function doGet(e) {
-  const action = e.parameter.action;
   const orderNo = e.parameter.orderNo;
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName('shelf_data');
   const data = sh.getDataRange().getValues();
-
-  if (action === 'get') {
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][0] == orderNo) {
-        return ContentService.createTextOutput(JSON.stringify({
-          success: true,
-          order: {
-            orderNo: data[i][0],
-            name: data[i][1],
-            category: data[i][2],
-            date: data[i][3],
-            shelfCode: data[i][4],
-            status: data[i][5]
-          }
-        })).setMimeType(ContentService.MimeType.JSON);
-      }
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === String(orderNo)) {
+      return output({ success:true, order:{
+        orderNo:data[i][0], name:data[i][1], category:data[i][2],
+        date:data[i][3], shelfCode:data[i][4], status:data[i][5]
+      }});
     }
-    return ContentService.createTextOutput(
-      JSON.stringify({success: false})
-    ).setMimeType(ContentService.MimeType.JSON);
   }
+  return output({success:false});
+}
 
-  if (action === 'register' || action === 'complete') {
-    const body = JSON.parse(e.postData.contents);
-    // 既存行を検索・更新 or 追加
-    // ... 実装省略
+function doPost(e) {
+  const body = JSON.parse(e.postData.contents);
+  const order = body.order;
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName('shelf_data');
+  const data = sh.getDataRange().getValues();
+  const row = [order.orderNo,order.name,order.category,order.date,
+               order.shelfCode,order.status,order.registeredAt||'',order.completedAt||''];
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === String(order.orderNo)) {
+      sh.getRange(i+1,1,1,8).setValues([row]);
+      return output({success:true});
+    }
   }
+  sh.appendRow(row);
+  return output({success:true});
+}
+
+function output(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }`;
 }
 
-// ===== GS同期 =====
 async function syncToGS(action, order) {
   if (!gsUrl) return;
-  try {
-    await fetch(gsUrl, {
-      method: 'POST',
-      body: JSON.stringify({ action, order }),
-    });
-  } catch(e) {
-    console.warn('GS sync failed:', e);
-  }
+  try { await fetch(gsUrl, { method:'POST', body:JSON.stringify({action,order}) }); }
+  catch(e) { console.warn('GS sync failed:',e); }
 }
 
-// ===== ローカル保存 =====
-function saveLocal() {
-  localStorage.setItem('shelfData', JSON.stringify(shelfData));
-}
+function saveLocal() { localStorage.setItem('shelfData', JSON.stringify(shelfData)); }
 
-// ===== トースト =====
 function showToast(msg, type='') {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.className = 'toast show' + (type ? ' '+type : '');
-  clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  t.className = 'toast show'+(type?' '+type:'');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(()=>t.classList.remove('show'), 3000);
 }
-
-// ===== 初期化 =====
-renderShelfGrid();
 </script>
 
 </body>
